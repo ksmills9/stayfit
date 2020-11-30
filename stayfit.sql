@@ -60,7 +60,7 @@ CREATE TABLE `bookablelocation` (
   `Capacity` varchar(255) NOT NULL,
   `Open_time` time NOT NULL,
   `Close_time` time NOT NULL,
-  `Price` float NOT NULL,
+  `Price` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -213,7 +213,7 @@ CREATE TABLE `rentable_equipment` (
   `Equipment_ID` varchar(255) NOT NULL,
   `Name` varchar(255) NOT NULL,
   `Quantity` int(11) NOT NULL,
-  `Price` float NOT NULL,
+  `Price` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
