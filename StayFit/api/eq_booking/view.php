@@ -4,7 +4,7 @@
     header('Content-Type: application/json');
 
     include_once '../../config/Database.php';
-    include_once '../../models/Equipment_booking.php';
+    include_once '../../models/Booking.php';
 
     //Instantiate DB & connect
     $database = new Database();
@@ -74,5 +74,5 @@
             );
         }
     }
-    
 
+?>
