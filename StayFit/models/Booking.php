@@ -99,7 +99,13 @@
 
             //create queries
             //query to adds to the booking table
-            $query1 = "INSERT INTO booking (Booking_ID, Client_ID, Date, Start_time, End_time) VALUES ('" . $this->Booking_ID . "', '" 
+            $query1 = "INSERT INTO booking (
+                Booking_ID, 
+                Client_ID, 
+                Date, 
+                Start_time, 
+                End_time) 
+                VALUES ('" . $this->Booking_ID . "', '" 
                 . $this->Client_ID ."', '" 
                 . $this->Date . "', '" 
                 . $this->Start_time . "', '" 
@@ -116,14 +122,26 @@
                 . $this->Equipment_ID . "', '" 
                 . $this->Quantity_booked . "')";
             
+            //create quantity to be updated in rentable equipment
+            $QBookedToDecrease = intval($this->Quantity_booked);
+            
+            //query to update the rentable equipment
+            $query3 = "UPDATE rentable_equipment 
+            SET Quantity = Quantity-" . $QBookedToDecrease . " 
+            WHERE rentable_equipment.Equipment_ID = '" . $this->Equipment_ID . "'";
+            
             $stmt1 = $this->conn->prepare($query1);
 
             $stmt2 = $this->conn->prepare($query2);
+
+            $stmt3 = $this->conn->prepare($query3);
             
             //execute queries
             if($stmt1->execute()){
                 if($stmt2->execute()){
-                    return true;
+                    if($stmt3->execute()){
+                        return true;
+                    }  
                 }
             }
 
@@ -131,10 +149,12 @@
             if($stmt1 != NULL){
                 printf("Error: %s.\n", $stmt1->error);
             }
-            else{
+            elseif($stmt2 != NULL){
                 printf("Error: %s.\n", $stmt2->error);
             }
-            
+            else{
+                printf("Error: %s.\n", $stmt3->error);
+            }
             return false;
 
         }
