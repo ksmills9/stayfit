@@ -32,7 +32,7 @@
                     'Start_time' => $row['Start_time'],
                     'End_time' => $row['End_time'],
                     'Equipment_ID' => $row['Equipment_ID'],
-                    'Quantity_book' => $row['Quantity_booked']
+                    'Quantity_booked' => $row['Quantity_booked']
                 );
             }
             //Turn to JSON & output
@@ -61,7 +61,7 @@
                     'Start_time' => $row['Start_time'],
                     'End_time' => $row['End_time'],
                     'Equipment_ID' => $row['Equipment_ID'],
-                    'Quantity_book' => $row['Quantity_booked']
+                    'Quantity_booked' => $row['Quantity_booked']
                 );
             }
             //Turn to JSON & output

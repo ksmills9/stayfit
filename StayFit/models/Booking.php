@@ -181,7 +181,98 @@
             }
         }
 
-       
+       //Function to Edit Equipment Bookings
+       public function edit(){
+           //Clean data
+           $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
+           $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+           $this->Date = htmlspecialchars(strip_tags($this->Date));
+           $this->Start_time = htmlspecialchars(strip_tags($this->Start_time));
+           $this->End_time = htmlspecialchars(strip_tags($this->End_time));
+           $this->Equipment_ID = htmlspecialchars(strip_tags($this->Equipment_ID));
+           $this->Quantity_booked = htmlspecialchars(strip_tags($this->Quantity_booked));
+
+           //update queries
+           //query to updates the booking table
+           $query1 = "UPDATE booking
+               SET Date='" . $this->Date . 
+               "', Start_time='" . $this->Start_time . 
+               "', End_time='" . $this->End_time . 
+               "' WHERE booking.Booking_ID= 
+               '" . $this->Booking_ID . "'";
+           
+           //query that updates the equipment booking table
+           $query2 = "UPDATE " . $this->table . "
+                SET 
+                Equipment_ID='" . $this->Equipment_ID . 
+                "', Quantity_booked='" . $this->Quantity_booked . 
+                "' WHERE " . $this->table .".Booking_ID= 
+                '" . $this->Booking_ID . "'";
+            
+            //changes to booking table
+            
+            //create quantity to be updated in rentable equipment
+            $QBookedToChange = intval($this->Quantity_booked);
+            
+            //Constraint to Change
+            //Equipment_booking
+            //ALTER TABLE `equipment_booking` DROP FOREIGN KEY `eqBookingRef`; ALTER TABLE `equipment_booking` ADD CONSTRAINT `eqBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking`(`Booking_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+            //made_past_booking
+            //ALTER TABLE `made_past_booking` DROP FOREIGN KEY `pastBookingRef`; ALTER TABLE `made_past_booking` ADD CONSTRAINT `pastBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking`(`Booking_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+            //gym_booking
+            //ALTER TABLE `gym_booking` DROP FOREIGN KEY `gymBookingRef`; ALTER TABLE `gym_booking` ADD CONSTRAINT `gymBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking`(`Booking_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+            //space_booking
+            //ALTER TABLE `space_booking` DROP FOREIGN KEY `spaceBookingRef`; ALTER TABLE `space_booking` ADD CONSTRAINT `spaceBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking`(`Booking_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+            //query to update the rentable equipment
+            $query3 = "UPDATE rentable_equipment 
+            SET Quantity = Quantity-" . $QBookedToChange . " 
+            WHERE rentable_equipment.Equipment_ID = '" . $this->Equipment_ID . "'";
+            
+            $stmt1 = $this->conn->prepare($query1);
+
+            $stmt2 = $this->conn->prepare($query2);
+
+            $stmt3 = $this->conn->prepare($query3);
+
+            if($stmt1->execute()){
+                if($stmt2->execute()){
+                    if($stmt3->execute()){
+                        //Need to add a query to return the number of the rentable equipment borrowed, before it decrements another equipment again
+                        return True;
+                    }
+                }
+           }
+
+           //Print error if something goes wrong
+           if($stmt1 != NULL){
+                printf("Error: %s.\n", $stmt1->error);
+            }
+            elseif($stmt2 != NULL){
+                printf("Error: %s.\n", $stmt2->error);
+            }
+            else{
+                printf("Error: %s.\n", $stmt3->error);
+            }
+            return false;
+        }
+
+        public function delete(){
+            $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+
+            $query =  "DELETE FROM booking WHERE booking.`Booking_ID` = '" . $this->Booking_ID . "'";
+
+            $stmt = $this->conn->prepare($query);
+
+            //execute query
+            if($stmt->execute()){
+                return True;
+            }
+
+            printf("Error: %s.\n", $stmt->error);
+
+            return False;
+        }
 
 
     }
