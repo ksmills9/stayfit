@@ -70,6 +70,7 @@
             return $stmt;
         }
 
+        //Function to select equipment bookings
         public function select(){
             //Create query
             $query = "SELECT 
@@ -94,6 +95,7 @@
             return $stmt;
         }
 
+        //Function to make equipment bookings
         public function make(){
             //Clean data
             $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
@@ -179,34 +181,34 @@
 
         }
 
-       //Function to Edit Equipment Bookings
-       public function edit(){
-           //Clean data
-           $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
-           $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
-           $this->Date = htmlspecialchars(strip_tags($this->Date));
-           $this->Start_time = htmlspecialchars(strip_tags($this->Start_time));
-           $this->End_time = htmlspecialchars(strip_tags($this->End_time));
-           $this->Equipment_ID = htmlspecialchars(strip_tags($this->Equipment_ID));
-           $this->Quantity_booked = htmlspecialchars(strip_tags($this->Quantity_booked));
+        //Function to Edit Equipment Bookings
+        public function edit(){
+            //Clean data
+            $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
+            $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+            $this->Date = htmlspecialchars(strip_tags($this->Date));
+            $this->Start_time = htmlspecialchars(strip_tags($this->Start_time));
+            $this->End_time = htmlspecialchars(strip_tags($this->End_time));
+            $this->Equipment_ID = htmlspecialchars(strip_tags($this->Equipment_ID));
+            $this->Quantity_booked = htmlspecialchars(strip_tags($this->Quantity_booked));
 
-           //update queries
-           //query to updates the booking table
-           $query1 = "UPDATE booking
-               SET Date='" . $this->Date . 
-               "', Start_time='" . $this->Start_time . 
-               "', End_time='" . $this->End_time . 
-               "' WHERE booking.Booking_ID= 
-               '" . $this->Booking_ID . "'";
-           
-           //query that updates the equipment booking table
-           $query2 = "UPDATE " . $this->table . "
-                SET 
-                Equipment_ID='" . $this->Equipment_ID . 
-                "', Quantity_booked='" . $this->Quantity_booked . 
-                "' WHERE " . $this->table .".Booking_ID= 
+            //update queries
+            //query to updates the booking table
+            $query1 = "UPDATE booking
+                SET Date='" . $this->Date . 
+                "', Start_time='" . $this->Start_time . 
+                "', End_time='" . $this->End_time . 
+                "' WHERE booking.Booking_ID= 
                 '" . $this->Booking_ID . "'";
             
+            //query that updates the equipment booking table
+            $query2 = "UPDATE " . $this->table . "
+                    SET 
+                    Equipment_ID='" . $this->Equipment_ID . 
+                    "', Quantity_booked='" . $this->Quantity_booked . 
+                    "' WHERE " . $this->table .".Booking_ID= 
+                    '" . $this->Booking_ID . "'";
+                
             //create quantity to be updated in rentable equipment
             $QBookedToChange = intval($this->Quantity_booked);
             
@@ -238,10 +240,10 @@
                         return True;
                     }
                 }
-           }
+            }
 
-           //Print error if something goes wrong
-           if($stmt1 != NULL){
+            //Print error if something goes wrong
+            if($stmt1 != NULL){
                 printf("Error: %s.\n", $stmt1->error);
             }
             elseif($stmt2 != NULL){
@@ -253,6 +255,7 @@
             return false;
         }
 
+        //Function to delete Equipment Bookings
         public function delete(){
             $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
 
@@ -278,6 +281,7 @@
         public $No_of_guests;
         public $Space_ID;
 
+        //Function to View all Gym Bookings
         public function view() {
             //Create query
             $query = 'SELECT 
@@ -300,6 +304,7 @@
             return $stmt;
         }
 
+        //Function to Select a Gym Booking
         public function select(){
             //Create query
             $query = "SELECT 
@@ -324,6 +329,7 @@
             return $stmt;
         }
 
+        //Function to Make Gym Bookings
         public function make(){
             //Clean data
             $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
@@ -394,6 +400,8 @@
             return false;
 
         }
+
+        //Function to Edit Gym Bookings
         public function edit(){
             //Clean data
             $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
@@ -439,7 +447,25 @@
                  printf("Error: %s.\n", $stmt2->error);
              }
              return false;
-         }
+        }
+
+        //Function to Delete Gym Bookings
+        public function delete(){
+            $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+
+            $query =  "DELETE FROM booking WHERE booking.`Booking_ID` = '" . $this->Booking_ID . "'";
+
+            $stmt = $this->conn->prepare($query);
+
+            //execute query
+            if($stmt->execute()){
+                return True;
+            }
+
+            printf("Error: %s.\n", $stmt->error);
+
+            return False;
+        }
  
     }
 ?>
