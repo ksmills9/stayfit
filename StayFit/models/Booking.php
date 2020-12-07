@@ -274,10 +274,56 @@
     }
 
     class Gym_booking extends Booking{
-        private $table = 'equipment_booking';
+        private $table = 'gym_booking';
 
         //Equipment booking properties
         public $No_of_guests;
         public $Space_ID;
+
+        public function view() {
+            //Create query
+            $query = 'SELECT 
+            G.Booking_ID,
+            G.Client_ID,
+            B.Date,
+            B.Start_time,
+            B.End_time,
+            G.No_of_guests,
+            G.Space_ID
+              FROM ' . $this->table . ' as G
+            INNER JOIN booking as B ON G.Booking_ID=B.Booking_ID';
+
+            //Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            //Execute
+            $stmt->execute();
+            
+            return $stmt;
+        }
+
+        public function select(){
+            //Create query
+            $query = "SELECT 
+            G.Booking_ID,
+            G.Client_ID,
+            B.Date,
+            B.Start_time,
+            B.End_time,
+            G.No_of_guests,
+            G.Space_ID
+              FROM " . $this->table . " as G
+            INNER JOIN booking as B ON G.Booking_ID=B.Booking_ID
+             WHERE
+             G.Booking_ID= '" . $this->Booking_ID . "'";
+
+            //Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            //Execute
+            $stmt->execute();
+            
+            return $stmt;
+        }
     }
 ?>
