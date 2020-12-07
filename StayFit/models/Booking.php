@@ -23,8 +23,6 @@
         private $table = 'equipment_booking';
 
         //Equipment booking properties
-        // public $Client_ID;
-        // public $Booking_ID;
         public $Equipment_ID;
         public $Quantity_booked;
 
@@ -273,7 +271,13 @@
 
             return False;
         }
+    }
 
+    class Gym_booking extends Booking{
+        private $table = 'equipment_booking';
 
+        //Equipment booking properties
+        public $No_of_guests;
+        public $Space_ID;
     }
 ?>
