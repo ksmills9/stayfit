@@ -207,8 +207,6 @@
                 "' WHERE " . $this->table .".Booking_ID= 
                 '" . $this->Booking_ID . "'";
             
-            //changes to booking table
-            
             //create quantity to be updated in rentable equipment
             $QBookedToChange = intval($this->Quantity_booked);
             
@@ -276,7 +274,7 @@
     class Gym_booking extends Booking{
         private $table = 'gym_booking';
 
-        //Equipment booking properties
+        //Gym booking properties
         public $No_of_guests;
         public $Space_ID;
 
@@ -396,5 +394,52 @@
             return false;
 
         }
+        public function edit(){
+            //Clean data
+            $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
+            $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+            $this->Date = htmlspecialchars(strip_tags($this->Date));
+            $this->Start_time = htmlspecialchars(strip_tags($this->Start_time));
+            $this->End_time = htmlspecialchars(strip_tags($this->End_time));
+            $this->No_of_guests = htmlspecialchars(strip_tags($this->No_of_guests));
+            $this->Space_ID = htmlspecialchars(strip_tags($this->Space_ID));
+ 
+            //update queries
+            //query to updates the booking table
+            $query1 = "UPDATE booking
+                SET Date='" . $this->Date . 
+                "', Start_time='" . $this->Start_time . 
+                "', End_time='" . $this->End_time . 
+                "' WHERE booking.Booking_ID= 
+                '" . $this->Booking_ID . "'";
+            
+            //query that updates the gym booking table
+            $query2 = "UPDATE " . $this->table . "
+                SET 
+                No_of_guests='" . $this->No_of_guests . 
+                "', Space_ID='" . $this->Space_ID . 
+                "' WHERE " . $this->table .".Booking_ID= 
+                '" . $this->Booking_ID . "'";
+            
+            $stmt1 = $this->conn->prepare($query1);
+
+            $stmt2 = $this->conn->prepare($query2);
+
+            if($stmt1->execute()){
+                if($stmt2->execute()){
+                    return True;
+                }
+            }
+ 
+            //Print error if something goes wrong
+            if($stmt1 != NULL){
+                 printf("Error: %s.\n", $stmt1->error);
+             }
+             else{
+                 printf("Error: %s.\n", $stmt2->error);
+             }
+             return false;
+         }
+ 
     }
 ?>

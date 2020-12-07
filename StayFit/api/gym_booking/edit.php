@@ -1,0 +1,39 @@
+<?php
+    //Headers
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Methods: PUT');
+    header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-Width');
+    
+    include_once '../../config/Database.php';
+    include_once '../../models/Booking.php';
+
+    //Instantiate DB & connect
+    $database = new Database();
+    $db = $database->connect();
+
+    //Instantiate equipment booking object
+    $gym_booking = new Gym_booking($db);
+
+    //Get raw posted data
+    $data = json_decode(file_get_contents("php://input"));
+
+    $gym_booking->Client_ID = $data->Client_ID;
+    $gym_booking->Booking_ID = $data->Booking_ID;
+    $gym_booking->Date = $data->Date;
+    $gym_booking->Start_time = $data->Start_time;
+    $gym_booking->End_time = $data->End_time;
+    $gym_booking->No_of_guests = $data->No_of_guests;
+    $gym_booking->Space_ID = $data->Space_ID;
+
+    //Edit booking
+    if($gym_booking->edit()){
+        echo json_encode(
+            array('message' => 'Gym Booking updated')
+        );
+    } else {
+        echo json_encode(
+            array('message' => 'Gym Booking not updated')
+        );
+    }
+?>
