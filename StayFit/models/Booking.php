@@ -10,25 +10,13 @@
         public $Start_time;
         public $End_time;
 
+        public $Member_ID;
+
         //Constructor with DB
         public function __construct($db) {
             $this->conn = $db;
         }
 
-        public function add(){
-            //Create query
-            $query = "INSERT INTO " . $table . "(
-                Booking_ID, 
-                Client_ID, 
-                Date, 
-                Start_time, 
-                End_time) 
-                VALUES ('" . $Booking_ID . "', " 
-                . $Client_ID ."', '" 
-                . $Date . "', '" 
-                . $Start_time . "', '" 
-                . $End_time . ")";
-        }
     }
 
     class Equipment_booking extends Booking{
@@ -135,11 +123,22 @@
             $stmt2 = $this->conn->prepare($query2);
 
             $stmt3 = $this->conn->prepare($query3);
+
+            $stmt4;
             
             //execute queries
             if($stmt1->execute()){
                 if($stmt2->execute()){
                     if($stmt3->execute()){
+                        //checks if the client is a member or not
+                        if($this->checkMember()){
+                            //query to insert into made past bookings
+                            $query4 = "INSERT INTO made_past_booking (Member_ID, Booking_ID) VALUES ('" . $this->Member_ID . "', '" . $this->Booking_ID . "')";
+                            //prepare query
+                            $stmt4 = $this->conn->prepare($query4);
+                            //insert into past bookings table
+                            $stmt4->execute();
+                        }
                         return true;
                     }  
                 }
@@ -152,12 +151,38 @@
             elseif($stmt2 != NULL){
                 printf("Error: %s.\n", $stmt2->error);
             }
-            else{
+            elseif($stmt3 !=NULL){
                 printf("Error: %s.\n", $stmt3->error);
+            } else{
+                printf("Error: %s.\n", $stmt4->error);
             }
             return false;
 
         }
+
+        //function that checks if the client is a member and adds their member_ID to the model.
+        public function checkMember(){
+            $query = "SELECT *
+            FROM member
+            WHERE member.Client_ID= '" . $this->Client_ID . "'";
+
+            $stmt = $this->conn->prepare($query);
+
+            $stmt->execute();
+
+            if($stmt->rowCount()>0){
+                while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    $this->Member_ID = $row['Member_ID'];
+                }
+                return True;
+            } else{
+                return False;
+                printf("Error: %s.\n", $stmt->error);
+            }
+        }
+
+       
+
 
     }
 ?>
