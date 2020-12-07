@@ -17,6 +17,27 @@
             $this->conn = $db;
         }
 
+        //function that checks if the client is a member and adds their member_ID to the model.
+        public function checkMember(){
+            $query = "SELECT *
+            FROM member
+            WHERE member.Client_ID= '" . $this->Client_ID . "'";
+
+            $stmt = $this->conn->prepare($query);
+
+            $stmt->execute();
+
+            if($stmt->rowCount()>0){
+                while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    $this->Member_ID = $row['Member_ID'];
+                }
+                return True;
+            } else{
+                return False;
+                printf("Error: %s.\n", $stmt->error);
+            }
+        }
+
     }
 
     class Equipment_booking extends Booking{
@@ -73,7 +94,7 @@
             return $stmt;
         }
 
-        public function make() {
+        public function make(){
             //Clean data
             $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
             $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
@@ -156,27 +177,6 @@
             }
             return false;
 
-        }
-
-        //function that checks if the client is a member and adds their member_ID to the model.
-        public function checkMember(){
-            $query = "SELECT *
-            FROM member
-            WHERE member.Client_ID= '" . $this->Client_ID . "'";
-
-            $stmt = $this->conn->prepare($query);
-
-            $stmt->execute();
-
-            if($stmt->rowCount()>0){
-                while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-                    $this->Member_ID = $row['Member_ID'];
-                }
-                return True;
-            } else{
-                return False;
-                printf("Error: %s.\n", $stmt->error);
-            }
         }
 
        //Function to Edit Equipment Bookings
@@ -324,6 +324,77 @@
             $stmt->execute();
             
             return $stmt;
+        }
+
+        public function make(){
+            //Clean data
+            $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
+            $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+            $this->Date = htmlspecialchars(strip_tags($this->Date));
+            $this->Start_time = htmlspecialchars(strip_tags($this->Start_time));
+            $this->End_time = htmlspecialchars(strip_tags($this->End_time));
+            $this->No_of_guests = htmlspecialchars(strip_tags($this->No_of_guests));
+            $this->Space_ID = htmlspecialchars(strip_tags($this->Space_ID));
+
+            //create queries
+            //query to adds to the booking table
+            $query1 = "INSERT INTO booking (
+                Booking_ID, 
+                Client_ID, 
+                Date, 
+                Start_time, 
+                End_time) 
+                VALUES ('" . $this->Booking_ID . "', '" 
+                . $this->Client_ID ."', '" 
+                . $this->Date . "', '" 
+                . $this->Start_time . "', '" 
+                . $this->End_time . "')";
+            
+            //query that adds to the gym booking table
+            $query2 = "INSERT INTO " . $this->table . " (
+                Client_ID, 
+                Booking_ID, 
+                No_of_guests, 
+                Space_ID) 
+                VALUES ('" . $this->Client_ID . "', '" 
+                . $this->Booking_ID ."', '" 
+                . $this->No_of_guests . "', '" 
+                . $this->Space_ID . "')";
+            
+            $stmt1 = $this->conn->prepare($query1);
+
+            $stmt2 = $this->conn->prepare($query2);
+
+            $stmt3;
+            
+            //execute queries
+            if($stmt1->execute()){
+                if($stmt2->execute()){
+                    //checks if the client is a member or not
+                    if($this->checkMember()){
+                        //query to insert into made past bookings
+                        $query3 = "INSERT INTO made_past_booking (Member_ID, Booking_ID) VALUES ('" . $this->Member_ID . "', '" . $this->Booking_ID . "')";
+                        //prepare query
+                        $stmt3 = $this->conn->prepare($query3);
+                        //insert into past bookings table
+                        $stmt3->execute();
+                    }
+                    return true;  
+                }
+            }
+
+            //Print error if something goes wrong
+            if($stmt1 != NULL){
+                printf("Error: %s.\n", $stmt1->error);
+            }
+            elseif($stmt2 != NULL){
+                printf("Error: %s.\n", $stmt2->error);
+            }
+            else{
+                printf("Error: %s.\n", $stmt3->error);
+            }
+            return false;
+
         }
     }
 ?>
