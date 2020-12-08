@@ -103,8 +103,15 @@
         // add Non-Members
         public function add() {
           //Create query
-          $query =  'INSERT INTO ' . $this->table . ' SET Client_ID = :Client_ID, last_visited_date = :last_visited_date, last_entry_time = :last_entry_time, last_exit_time = :last_exit_time';
-
+          $query =  "INSERT INTO non_member (
+                Client_ID,
+                last_visited_date,
+                last_entry_time,
+                last_exit_time)
+                VALUES ('" . $this->Client_ID . "', '"
+                . $this->last_visited_date ."', '"
+                . $this->last_entry_time . "', '"
+                . $this->last_exit_time . "')";
           //Prepare statement
           $stmt = $this->conn->prepare($query);
 
