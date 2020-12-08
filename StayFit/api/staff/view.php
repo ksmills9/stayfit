@@ -4,7 +4,7 @@
     header('Content-Type: application/json');
 
     include_once '../../config/Database.php';
-    include_once '../../models/Admin.php';
+    include_once '../../models/Staff.php';
 
     if(!isset($_SERVER ['PHP_AUTH_USER'])) {
         header("WWW-Authenticate: Basic realm=\"Private Area\"");
@@ -30,29 +30,30 @@
     $db = $database->connect();
 
     //Instantiate equipment booking object
-    $admin = new Admin($db);
+    $staff = new Staff($db);
 
-    //Check for admin
+    //Check for staff
 
-    if(isset($_GET['Admin_ID'])){
-        //Get Admin ID
-        $admin->Admin_ID = $_GET['Admin_ID'];
+    if(isset($_GET['Staff_ID'])){
+        //Get Staff_ID
+        $staff->Staff_ID = $_GET['Staff_ID'];
         //Get Equipment Bookings
-        $result = $admin->select();
+        $result = $staff->select();
         $num = $result->rowCount();
         
         //Check for bookings
         if($num > 0){
-            $admin_arr = array();
+            $staff_arr = array();
             while($row = $result->fetch(PDO::FETCH_ASSOC)){
-                $admin_arr[$row['Admin_ID']] = array(
-                    'Admin_ID' => $row['Admin_ID'],
-                    'First_name' => $row['First_name'],
-                    'Last_name' => $row['Last_name']
+                $staff_arr[$row['Staff_ID']] = array(
+                    'Staff_ID' => $row['Staff_ID'],
+                    'FirstName' => $row['FirstName'],
+                    'LastName' => $row['LastName'],
+                    'JobTitle' => $row['JobTitle']
                 );
             }
             //Turn to JSON & output
-            echo json_encode($admin_arr);
+            echo json_encode($staff_arr);
         }
         else{
             //No Data
@@ -62,19 +63,20 @@
         }
     }
     else{
-        $result = $admin->view();
+        $result = $staff->view();
         $num = $result->rowCount();
         if($num > 0){
-            $admin_arr = array();
+            $staff_arr = array();
             while($row = $result->fetch(PDO::FETCH_ASSOC)){
-                $admin_arr[$row['Admin_ID']] = array(
-                    'Admin_ID' => $row['Admin_ID'],
-                    'First_name' => $row['First_name'],
-                    'Last_name' => $row['Last_name']
+                $staff_arr[$row['Staff_ID']] = array(
+                    'Staff_ID' => $row['Staff_ID'],
+                    'FirstName' => $row['FirstName'],
+                    'LastName' => $row['LastName'],
+                    'JobTitle' => $row['JobTitle']
                 );
             }
             //Turn to JSON & output
-            echo json_encode($admin_arr);
+            echo json_encode($staff_arr);
         }
         else{
             //No Data
