@@ -36,6 +36,8 @@
     $data = json_decode(file_get_contents("php://input"));
 
     $member->Client_ID = $data->Client_ID;
+    $member->FirstName = $data->FirstName;
+    $member->LastName = $data->LastName;
     $member->Member_ID = $data->Member_ID;
   
     
