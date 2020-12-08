@@ -36,19 +36,15 @@
     $data = json_decode(file_get_contents("php://input"));
 
     $admin->Admin_ID = $data->Admin_ID;
-    $admin->First_name = $data->First_name;
-    $admin->Last_name = $data->Last_name;
-    
-     //add Admin
-     if($admin->add()){
+
+    //Delete Admin
+    if($admin->delete()){
         echo json_encode(
-            array('message' => 'Admin added')
+            array('message' => 'Admin deleted')
         );
     } else {
         echo json_encode(
-            array('message' => 'Admin not added')
+            array('message' => 'Admin not deleted')
         );
     }
-
-
 ?>
