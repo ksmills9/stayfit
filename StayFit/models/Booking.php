@@ -466,6 +466,199 @@
 
             return False;
         }
+    }
+
+    class Space_booking extends Booking{
+        private $table = 'space_booking';
+
+        //Gym booking properties
+        public $No_of_guests;
+        public $Space_ID;
+
+        //Function to View all Space Bookings
+        public function view() {
+            //Create query
+            $query = 'SELECT 
+            S.Booking_ID,
+            S.Client_ID,
+            B.Date,
+            B.Start_time,
+            B.End_time,
+            S.No_of_guests,
+            S.Space_ID
+              FROM ' . $this->table . ' as S
+            INNER JOIN booking as B ON S.Booking_ID=B.Booking_ID';
+
+            //Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            //Execute
+            $stmt->execute();
+            
+            return $stmt;
+        }
+
+        //Function to Select a Space Booking
+        public function select(){
+            //Create query
+            $query = "SELECT 
+            S.Booking_ID,
+            S.Client_ID,
+            B.Date,
+            B.Start_time,
+            B.End_time,
+            S.No_of_guests,
+            S.Space_ID
+              FROM " . $this->table . " as S
+            INNER JOIN booking as B ON S.Booking_ID=B.Booking_ID
+             WHERE
+             S.Booking_ID= '" . $this->Booking_ID . "'";
+
+            //Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            //Execute
+            $stmt->execute();
+            
+            return $stmt;
+        }
+
+        //Function to Make Space Bookings
+        public function make(){
+            //Clean data
+            $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
+            $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+            $this->Date = htmlspecialchars(strip_tags($this->Date));
+            $this->Start_time = htmlspecialchars(strip_tags($this->Start_time));
+            $this->End_time = htmlspecialchars(strip_tags($this->End_time));
+            $this->No_of_guests = htmlspecialchars(strip_tags($this->No_of_guests));
+            $this->Space_ID = htmlspecialchars(strip_tags($this->Space_ID));
+
+            //create queries
+            //query to adds to the booking table
+            $query1 = "INSERT INTO booking (
+                Booking_ID, 
+                Client_ID, 
+                Date, 
+                Start_time, 
+                End_time) 
+                VALUES ('" . $this->Booking_ID . "', '" 
+                . $this->Client_ID ."', '" 
+                . $this->Date . "', '" 
+                . $this->Start_time . "', '" 
+                . $this->End_time . "')";
+            
+            //query that adds to the space booking table
+            $query2 = "INSERT INTO " . $this->table . " (
+                Client_ID, 
+                Booking_ID, 
+                No_of_guests, 
+                Space_ID) 
+                VALUES ('" . $this->Client_ID . "', '" 
+                . $this->Booking_ID ."', '" 
+                . $this->No_of_guests . "', '" 
+                . $this->Space_ID . "')";
+            
+            $stmt1 = $this->conn->prepare($query1);
+
+            $stmt2 = $this->conn->prepare($query2);
+
+            $stmt3;
+            
+            //execute queries
+            if($stmt1->execute()){
+                if($stmt2->execute()){
+                    //checks if the client is a member or not
+                    if($this->checkMember()){
+                        //query to insert into made past bookings
+                        $query3 = "INSERT INTO made_past_booking (Member_ID, Booking_ID) VALUES ('" . $this->Member_ID . "', '" . $this->Booking_ID . "')";
+                        //prepare query
+                        $stmt3 = $this->conn->prepare($query3);
+                        //insert into past bookings table
+                        $stmt3->execute();
+                    }
+                    return true;  
+                }
+            }
+
+            //Print error if something goes wrong
+            if($stmt1 != NULL){
+                printf("Error: %s.\n", $stmt1->error);
+            }
+            elseif($stmt2 != NULL){
+                printf("Error: %s.\n", $stmt2->error);
+            }
+            else{
+                printf("Error: %s.\n", $stmt3->error);
+            }
+            return false;
+
+        }
+
+        //Function to Edit Gym Bookings
+        public function edit(){
+            //Clean data
+            $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
+            $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+            $this->Date = htmlspecialchars(strip_tags($this->Date));
+            $this->Start_time = htmlspecialchars(strip_tags($this->Start_time));
+            $this->End_time = htmlspecialchars(strip_tags($this->End_time));
+            $this->No_of_guests = htmlspecialchars(strip_tags($this->No_of_guests));
+            $this->Space_ID = htmlspecialchars(strip_tags($this->Space_ID));
  
+            //update queries
+            //query to updates the booking table
+            $query1 = "UPDATE booking
+                SET Date='" . $this->Date . 
+                "', Start_time='" . $this->Start_time . 
+                "', End_time='" . $this->End_time . 
+                "' WHERE booking.Booking_ID= 
+                '" . $this->Booking_ID . "'";
+            
+            //query that updates the space booking table
+            $query2 = "UPDATE " . $this->table . "
+                SET 
+                No_of_guests='" . $this->No_of_guests . 
+                "', Space_ID='" . $this->Space_ID . 
+                "' WHERE " . $this->table .".Booking_ID= 
+                '" . $this->Booking_ID . "'";
+            
+            $stmt1 = $this->conn->prepare($query1);
+
+            $stmt2 = $this->conn->prepare($query2);
+
+            if($stmt1->execute()){
+                if($stmt2->execute()){
+                    return True;
+                }
+            }
+ 
+            //Print error if something goes wrong
+            if($stmt1 != NULL){
+                 printf("Error: %s.\n", $stmt1->error);
+             }
+             else{
+                 printf("Error: %s.\n", $stmt2->error);
+             }
+             return false;
+        }
+
+        //Function to Delete Space Bookings
+        public function delete(){
+            $this->Booking_ID = htmlspecialchars(strip_tags($this->Booking_ID));
+
+            $query =  "DELETE FROM booking WHERE booking.`Booking_ID` = '" . $this->Booking_ID . "'";
+
+            $stmt = $this->conn->prepare($query);
+
+            //execute query
+            if($stmt->execute()){
+                return True;
+            }
+
+            printf("Error: %s.\n", $stmt->error);
+
+            return False;
+        }
     }
 ?>
