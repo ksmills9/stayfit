@@ -7,6 +7,7 @@
         public $Admin_ID;
         public $First_name;
         public $Last_name;
+        public $Request_ID;
 
         //Constructor with DB
         public function __construct($db) {
@@ -79,6 +80,40 @@
             $this->Admin_ID = htmlspecialchars(strip_tags($this->Admin_ID));
 
             $query =  "DELETE FROM admin WHERE admin.`Admin_ID` = '" . $this->Admin_ID . "'";
+
+            $stmt = $this->conn->prepare($query);
+
+            //execute query
+            if($stmt->execute()){
+                return True;
+            }
+
+            printf("Error: %s.\n", $stmt->error);
+
+            return False;
+        }
+
+        //admin to view the request table
+        public function view_request(){
+            //Create query
+            $query = 'SELECT *
+            FROM ask_approval_for_removal';
+
+            //Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            //Execute
+            $stmt->execute();
+
+            return $stmt;
+
+        }
+
+        //Function to remove a request
+        public function remove_request(){
+            $this->Request_ID = htmlspecialchars(strip_tags($this->Request_ID));
+
+            $query =  "DELETE FROM ask_approval_for_removal WHERE ask_approval_for_removal.`Request_ID` = '" . $this->Request_ID . "'";
 
             $stmt = $this->conn->prepare($query);
 
