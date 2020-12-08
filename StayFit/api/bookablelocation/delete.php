@@ -8,6 +8,23 @@
   include_once '../../config/Database.php';
   include_once '../../models/bookablelocation.php';
 
+  if(!isset($_SERVER ['PHP_AUTH_USER'])){
+    header ("WWW-Authenticate: Basic realm=\"Private Area\"");
+    header ("HTTP/1.0 401 Unauthorised");
+    print "Sorry, you need proper credentials";
+    exit;
+  }else{
+    if(($_SERVER['PHP_AUTH_USER'] == 'Admin' && ($_SERVER['PHP_AUTH_PW'] == 'password123'))){
+      print "You are in the private area";
+    }
+    else{
+      header("WWW-Authenticate: Basic realm=\"Private Area\"");
+    header ("HTTP/1.0 401 Unauthorised");
+    print "Sorry, you need proper credentials.";
+    exit;
+    }
+  }
+  
   // Instantiate DB & connect
   $database = new Database();
   $db = $database->connect();
