@@ -2,8 +2,8 @@
 -- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 27, 2020 at 12:22 AM
+-- Host: localhost
+-- Generation Time: Dec 08, 2020 at 07:08 PM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -63,6 +63,15 @@ CREATE TABLE `bookablelocation` (
   `Price` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `bookablelocation`
+--
+
+INSERT INTO `bookablelocation` (`Space_ID`, `Space_name`, `Location`, `Capacity`, `Open_time`, `Close_time`, `Price`) VALUES
+('G101', 'Fitness Centre/Gym', 'Kinesiology Block', '500', '07:00:00', '18:00:00', 4),
+('SC101', 'Squash Court 1', 'Kinesiology Block', '2', '07:00:00', '18:00:00', 2),
+('TC101', 'Tennis Court 1', 'Behind Cascade Hall', '8', '08:00:00', '20:00:00', 6);
+
 -- --------------------------------------------------------
 
 --
@@ -77,6 +86,30 @@ CREATE TABLE `booking` (
   `End_time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `booking`
+--
+
+INSERT INTO `booking` (`Booking_ID`, `Client_ID`, `Date`, `Start_time`, `End_time`) VALUES
+('E236435434', '23455', '2020-10-15', '15:00:00', '17:00:00'),
+('E23696734', '23455', '2020-10-17', '10:00:00', '12:00:00'),
+('E24387924097', '12345', '2020-09-14', '13:00:00', '14:00:00'),
+('E66555555', '23455', '2019-05-15', '15:00:00', '17:00:00'),
+('E6666661', '23455', '2020-09-18', '10:00:00', '13:00:00'),
+('E67760', '23455', '2015-09-19', '13:00:00', '14:00:00'),
+('E6776060', '23455', '2020-06-19', '15:00:00', '17:00:00'),
+('E677606780', '23455', '2020-06-19', '15:00:00', '17:00:00'),
+('E6777660', '23455', '2020-06-19', '15:00:00', '17:00:00'),
+('E6777710', '23455', '2020-06-19', '15:00:00', '17:00:00'),
+('E677777', '23455', '2020-06-19', '15:00:00', '17:00:00'),
+('E7474747', '23455', '2020-10-15', '10:00:00', '13:00:00'),
+('E7474748', '23455', '2020-12-15', '10:00:00', '13:00:00'),
+('G11111', '23455', '2020-07-19', '16:00:00', '17:00:00'),
+('G22222', '23455', '2020-07-20', '15:00:00', '17:00:00'),
+('S11111', '12345', '2020-07-19', '16:00:00', '17:00:00'),
+('S22222', '12345', '2020-07-29', '10:00:00', '12:00:00'),
+('S33333', '33456', '2019-07-29', '10:00:00', '12:00:00');
+
 -- --------------------------------------------------------
 
 --
@@ -89,6 +122,15 @@ CREATE TABLE `buy` (
   `Purchase_ID` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `buy`
+--
+
+INSERT INTO `buy` (`Equipment_ID`, `Client_ID`, `Purchase_ID`) VALUES
+('1', '23455', '1'),
+('1', '23455', '10'),
+('1', '23455', '4');
+
 -- --------------------------------------------------------
 
 --
@@ -100,6 +142,15 @@ CREATE TABLE `client` (
   `FirstName` varchar(255) NOT NULL,
   `LastName` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `client`
+--
+
+INSERT INTO `client` (`Client_ID`, `FirstName`, `LastName`) VALUES
+('12345', 'Kevin', 'Test'),
+('23455', 'Bryan', 'Test'),
+('33456', 'Aryo', 'Test');
 
 -- --------------------------------------------------------
 
@@ -114,6 +165,25 @@ CREATE TABLE `equipment_booking` (
   `Quantity_booked` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `equipment_booking`
+--
+
+INSERT INTO `equipment_booking` (`Client_ID`, `Booking_ID`, `Equipment_ID`, `Quantity_booked`) VALUES
+('23455', 'E236435434', 'T232232', 4),
+('23455', 'E23696734', 'T232232', 3),
+('12345', 'E24387924097', 'T232232', 7),
+('23455', 'E66555555', 'T232232', 4),
+('23455', 'E6666661', 'T232232', 1),
+('23455', 'E67760', 'T232232', 2),
+('23455', 'E6776060', 'T232232', 1),
+('23455', 'E677606780', 'T232232', 1),
+('23455', 'E6777660', 'T232232', 1),
+('23455', 'E6777710', 'T232232', 1),
+('23455', 'E677777', 'T232232', 1),
+('23455', 'E7474747', 'T232232', 2),
+('23455', 'E7474748', 'T232232', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -127,6 +197,14 @@ CREATE TABLE `gym_booking` (
   `Space_ID` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `gym_booking`
+--
+
+INSERT INTO `gym_booking` (`Client_ID`, `Booking_ID`, `No_of_guests`, `Space_ID`) VALUES
+('23455', 'G11111', 4, 'G101'),
+('23455', 'G22222', 4, 'G101');
+
 -- --------------------------------------------------------
 
 --
@@ -138,6 +216,19 @@ CREATE TABLE `made_past_booking` (
   `Booking_ID` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `made_past_booking`
+--
+
+INSERT INTO `made_past_booking` (`Member_ID`, `Booking_ID`) VALUES
+('24858202', 'G11111'),
+('24858202', 'G22222'),
+('24858202', 'E66555555'),
+('30592224', 'S11111'),
+('30592224', 'S22222'),
+('24858202', 'E7474747'),
+('24858202', 'E7474748');
+
 -- --------------------------------------------------------
 
 --
@@ -148,6 +239,14 @@ CREATE TABLE `member` (
   `Client_ID` varchar(255) NOT NULL,
   `Member_ID` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `member`
+--
+
+INSERT INTO `member` (`Client_ID`, `Member_ID`) VALUES
+('12345', '30592224'),
+('23455', '24858202');
 
 -- --------------------------------------------------------
 
@@ -161,6 +260,13 @@ CREATE TABLE `non_member` (
   `last_entry_time` time NOT NULL,
   `last_exit_time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `non_member`
+--
+
+INSERT INTO `non_member` (`Client_ID`, `last_visited_date`, `last_entry_time`, `last_exit_time`) VALUES
+('33456', '2020-10-06', '10:50:00', '12:00:00');
 
 -- --------------------------------------------------------
 
@@ -190,6 +296,13 @@ CREATE TABLE `purchasable_equipment` (
   `In_Stock` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `purchasable_equipment`
+--
+
+INSERT INTO `purchasable_equipment` (`Equipment_ID`, `Name`, `Price`, `In_Stock`) VALUES
+('1', 'Tennis Ball', '4', 89);
+
 -- --------------------------------------------------------
 
 --
@@ -202,6 +315,15 @@ CREATE TABLE `purchase` (
   `Date` date NOT NULL,
   `Quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `purchase`
+--
+
+INSERT INTO `purchase` (`Purchase_ID`, `Time`, `Date`, `Quantity`) VALUES
+('1', '10:00:00', '2019-07-29', 2),
+('10', '13:00:00', '2020-07-29', 5),
+('4', '12:00:00', '2019-07-29', 4);
 
 -- --------------------------------------------------------
 
@@ -216,6 +338,13 @@ CREATE TABLE `rentable_equipment` (
   `Price` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `rentable_equipment`
+--
+
+INSERT INTO `rentable_equipment` (`Equipment_ID`, `Name`, `Quantity`, `Price`) VALUES
+('T232232', 'Tennis Racket', 92, 1.5);
+
 -- --------------------------------------------------------
 
 --
@@ -228,6 +357,15 @@ CREATE TABLE `space_booking` (
   `No_of_guests` int(11) NOT NULL,
   `Space_ID` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `space_booking`
+--
+
+INSERT INTO `space_booking` (`Client_ID`, `Booking_ID`, `No_of_guests`, `Space_ID`) VALUES
+('12345', 'S11111', 1, 'SC101'),
+('12345', 'S22222', 1, 'TC101'),
+('33456', 'S33333', 2, 'TC101');
 
 -- --------------------------------------------------------
 
@@ -392,36 +530,36 @@ ALTER TABLE `buy`
 -- Constraints for table `equipment_booking`
 --
 ALTER TABLE `equipment_booking`
-  ADD CONSTRAINT `eqBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking` (`Booking_ID`),
-  ADD CONSTRAINT `eqClientRef` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`),
-  ADD CONSTRAINT `eqEquipmentRef` FOREIGN KEY (`Equipment_ID`) REFERENCES `rentable_equipment` (`Equipment_ID`);
+  ADD CONSTRAINT `eqBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking` (`Booking_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `eqClientRef` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `eqEquipmentRef` FOREIGN KEY (`Equipment_ID`) REFERENCES `rentable_equipment` (`Equipment_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `gym_booking`
 --
 ALTER TABLE `gym_booking`
-  ADD CONSTRAINT `gymBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking` (`Booking_ID`),
-  ADD CONSTRAINT `gymClientRef` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`),
-  ADD CONSTRAINT `gymSpaceRef` FOREIGN KEY (`Space_ID`) REFERENCES `bookablelocation` (`Space_ID`);
+  ADD CONSTRAINT `gymBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking` (`Booking_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `gymClientRef` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `gymSpaceRef` FOREIGN KEY (`Space_ID`) REFERENCES `bookablelocation` (`Space_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `made_past_booking`
 --
 ALTER TABLE `made_past_booking`
-  ADD CONSTRAINT `memberRef` FOREIGN KEY (`Member_ID`) REFERENCES `member` (`Member_ID`),
-  ADD CONSTRAINT `pastBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking` (`Booking_ID`);
+  ADD CONSTRAINT `memberRef` FOREIGN KEY (`Member_ID`) REFERENCES `member` (`Member_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pastBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking` (`Booking_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `member`
 --
 ALTER TABLE `member`
-  ADD CONSTRAINT `MemberClientKey` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`);
+  ADD CONSTRAINT `MemberClientKey` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `non_member`
 --
 ALTER TABLE `non_member`
-  ADD CONSTRAINT `nonMemClientRefKey` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`);
+  ADD CONSTRAINT `nonMemClientRefKey` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `payment`
@@ -434,9 +572,9 @@ ALTER TABLE `payment`
 -- Constraints for table `space_booking`
 --
 ALTER TABLE `space_booking`
-  ADD CONSTRAINT `spaceBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking` (`Booking_ID`),
-  ADD CONSTRAINT `spaceClientRef` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`),
-  ADD CONSTRAINT `spaceIDRef` FOREIGN KEY (`Space_ID`) REFERENCES `bookablelocation` (`Space_ID`);
+  ADD CONSTRAINT `spaceBookingRef` FOREIGN KEY (`Booking_ID`) REFERENCES `booking` (`Booking_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `spaceClientRef` FOREIGN KEY (`Client_ID`) REFERENCES `client` (`Client_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `spaceIDRef` FOREIGN KEY (`Space_ID`) REFERENCES `bookablelocation` (`Space_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
