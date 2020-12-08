@@ -104,18 +104,36 @@
             return False;
         }
 
+        
         //staff to make a request
         public function make_request(){
-            //Create query
-            $query = 'SELECT *
-            FROM ask_approval_for_removal';
+            date_default_timezone_set('America/Whitehorse');
 
+            //Clean data
+            $this->Admin_ID = htmlspecialchars(strip_tags($this->Admin_ID));
+            $this->Staff_ID = htmlspecialchars(strip_tags($this->Staff_ID));
+            $this->Request_ID = htmlspecialchars(strip_tags($this->Request_ID));
+            $this->description = htmlspecialchars(strip_tags($this->description));
+            $this->request_time = date('Y-m-d H:i:s', time());//auto generated with time made request
+
+            //Create query
+            $query = "INSERT INTO ask_approval_for_removal (
+                Admin_ID,
+                Staff_ID,
+                Request_ID,
+                description,
+                request_time) 
+                VALUES ('" . $this->Admin_ID . "', '" 
+                . $this->Staff_ID."', '" 
+                . $this->Request_ID."', '" 
+                . $this->description."', '"
+                . $this->request_time."')";
             //Prepare statement
             $stmt = $this->conn->prepare($query);
 
             //Execute
             $stmt->execute();
-
+            
             return $stmt;
 
         }
