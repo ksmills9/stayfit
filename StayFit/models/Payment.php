@@ -2,7 +2,7 @@
     class Payment {
         protected $conn;
 
-        private $table = 'booking';
+        private $table = 'payment';
 
         //Payment Properties
         public $Payment_ID;
