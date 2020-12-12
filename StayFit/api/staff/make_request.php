@@ -14,10 +14,10 @@
     }else{
         if(($_SERVER['PHP_AUTH_USER'] == 'Admin' && ($_SERVER['PHP_AUTH_PW'] == 'password123'))) {
             //Access granted to admins
-        } /*
+        } 
         elseif(($_SERVER['PHP_AUTH_USER'] == 'Staff' && ($_SERVER['PHP_AUTH_PW'] == 'password123'))) {
             //Access granted to staff
-        } */
+        } 
         else {
             header("WWW-Authenticate: Basic realm=\"Private Area\"");
             header("HTTP/1.0 401 Unauthorized");
