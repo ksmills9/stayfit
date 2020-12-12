@@ -12,7 +12,7 @@
     $database = new Database();
     $db = $database->connect();
 
-    //Instantiate equipment booking object
+    //Instantiate equipment purchase object
     $eq_booking = new buy($db);
 
     //Get raw posted data
@@ -26,7 +26,7 @@
     $eq_booking->Quantity = $data->Quantity;
 
 
-    //Make booking
+    //Make purchase
     if($eq_booking->make()){
         echo json_encode(
             array('message' => ' Purchase successful!')

@@ -2,7 +2,7 @@
     class Non_Members {
         private $conn;
         private $table = 'non_member';
-        //private $table2 = 'client';
+        private $table2 = 'client';
 
 
         //Equipment booking properties
@@ -102,8 +102,18 @@
 
         // add Non-Members
         public function add() {
+
           //Create query
-          $query =  "INSERT INTO non_member (
+
+          $query1 =  "INSERT INTO client (
+                      Client_ID,
+                      FirstName,
+                      LastName)
+                      VALUES ('" . $this->Client_ID . "', '"
+                      . $this->FirstName ."', '"
+                      . $this->LastName . "')";
+
+          $query2 =  "INSERT INTO non_member (
                 Client_ID,
                 last_visited_date,
                 last_entry_time,
@@ -112,24 +122,40 @@
                 . $this->last_visited_date ."', '"
                 . $this->last_entry_time . "', '"
                 . $this->last_exit_time . "')";
+          //echo $query1;
+
+
           //Prepare statement
-          $stmt = $this->conn->prepare($query);
+          $stmt1 = $this->conn->prepare($query1);
+          $stmt2 = $this->conn->prepare($query2);
 
           //Format data
+          $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
+          $this->FirstName = htmlspecialchars(strip_tags($this->FirstName));
+          $this->LastName = htmlspecialchars(strip_tags($this->LastName));
           $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
           $this->last_visited_date = htmlspecialchars(strip_tags($this->last_visited_date));
           $this->last_entry_time = htmlspecialchars(strip_tags($this->last_entry_time));
           $this->last_exit_time = htmlspecialchars(strip_tags($this->last_exit_time));
 
+
+
           //Bind data
-          $stmt->bindParam(':Client_ID', $this->Client_ID);
-          $stmt->bindParam(':last_visited_date', $this->last_visited_date);
-          $stmt->bindParam(':last_entry_time', $this->last_entry_time);
-          $stmt->bindParam(':last_exit_time', $this->last_exit_time);
+          $stmt1->bindParam(':Client_ID', $this->Client_ID);
+          $stmt1->bindParam(':FirstName', $this->FirstName);
+          $stmt1->bindParam(':LastName', $this->LastName);
+          $stmt2->bindParam(':Client_ID', $this->Client_ID);
+          $stmt2->bindParam(':last_visited_date', $this->last_visited_date);
+          $stmt2->bindParam(':last_entry_time', $this->last_entry_time);
+          $stmt2->bindParam(':last_exit_time', $this->last_exit_time);
+
+
 
           //Execute
-         if($stmt->execute()) {
+         if($stmt1->execute()) {
+           if($stmt2->execute()){
              return true;
+           }
          }
 
           printf("Error: %s.\n", $stmt->error);
@@ -138,21 +164,35 @@
 
         // Delete Bookable location
         public function delete() {
-            // Create query
+
             $query = 'DELETE FROM ' . $this->table . ' WHERE Client_ID = :Client_ID';
 
+
+            //$query2 = 'DELETE FROM ' . $this->table2 . ' WHERE Client_ID = :Client_ID';
+            //echo $this->Client_ID;
+
+            // Create query
+            //echo $query2;
             // Prepare statement
             $stmt = $this->conn->prepare($query);
+
+
 
             // Clean data
             $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
 
+
+
             // Bind data
             $stmt->bindParam(':Client_ID', $this->Client_ID);
 
+
+
             // Execute query
             if($stmt->execute()) {
+
             return true;
+
             }
 
             // Print error if something goes wrong

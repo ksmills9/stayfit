@@ -24,7 +24,7 @@
     exit;
     }
   }
-  
+
   // Instantiate DB & connect
   $database = new Database();
   $db = $database->connect();
@@ -37,6 +37,7 @@
 
   // Set ID to update
   $bookable_loc->Client_ID = $data->Client_ID;
+
 
   // Delete post
   if($bookable_loc->delete()) {
