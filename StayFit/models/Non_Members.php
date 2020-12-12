@@ -10,6 +10,8 @@
         public $last_visited_date;
         public $last_entry_time;
         public $last_exit_time;
+        public $FirstName;
+        public $LastName;
 
         //Constructor with DB
         public function __construct($db) {
@@ -102,8 +104,26 @@
 
         // add Non-Members
         public function add() {
+
+             //Format data
+          $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
+          $this->FirstName = htmlspecialchars(strip_tags($this->FirstName));
+          $this->LastName = htmlspecialchars(strip_tags($this->LastName));
+          $this->last_visited_date = htmlspecialchars(strip_tags($this->last_visited_date));
+          $this->last_entry_time = htmlspecialchars(strip_tags($this->last_entry_time));
+          $this->last_exit_time = htmlspecialchars(strip_tags($this->last_exit_time));
+
+            //insert into client first 
+            $query1 = "INSERT INTO client (
+                Client_ID,
+                FirstName,
+                LastName) 
+                VALUES ('" . $this->Client_ID . "', '" 
+                . $this->FirstName . "', '" 
+                . $this->LastName . "')";
+
           //Create query
-          $query =  "INSERT INTO non_member (
+          $query2 =  "INSERT INTO non_member (
                 Client_ID,
                 last_visited_date,
                 last_entry_time,
@@ -113,27 +133,23 @@
                 . $this->last_entry_time . "', '"
                 . $this->last_exit_time . "')";
           //Prepare statement
-          $stmt = $this->conn->prepare($query);
+          $stmt1 = $this->conn->prepare($query1);
+          $stmt2 = $this->conn->prepare($query2);
 
-          //Format data
-          $this->Client_ID = htmlspecialchars(strip_tags($this->Client_ID));
-          $this->last_visited_date = htmlspecialchars(strip_tags($this->last_visited_date));
-          $this->last_entry_time = htmlspecialchars(strip_tags($this->last_entry_time));
-          $this->last_exit_time = htmlspecialchars(strip_tags($this->last_exit_time));
-
-          //Bind data
-          $stmt->bindParam(':Client_ID', $this->Client_ID);
-          $stmt->bindParam(':last_visited_date', $this->last_visited_date);
-          $stmt->bindParam(':last_entry_time', $this->last_entry_time);
-          $stmt->bindParam(':last_exit_time', $this->last_exit_time);
 
           //Execute
-         if($stmt->execute()) {
-             return true;
-         }
-
-          printf("Error: %s.\n", $stmt->error);
-          return false;
+          if($stmt1->execute()){
+            if($stmt2->execute()){
+                return true;
+            }
+        }
+        if($stmt1 != NULL){
+            printf("Error: %s.\n", $stmt1->error);
+        }
+        elseif($stmt2 != NULL){
+            printf("Error: %s.\n", $stmt2->error);
+        }
+       return false;
       }
 
         // Delete Bookable location

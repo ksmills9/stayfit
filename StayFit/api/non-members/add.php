@@ -19,6 +19,8 @@
     $data = json_decode(file_get_contents("php://input"));
 
     $non_mem->Client_ID = $data->Client_ID;
+    $non_mem->FirstName = $data->FirstName;
+    $non_mem->LastName = $data->LastName;
     $non_mem->last_visited_date  = $data->last_visited_date;
     $non_mem->last_entry_time  = $data->last_entry_time ;
     $non_mem->last_exit_time  = $data->last_exit_time ;
