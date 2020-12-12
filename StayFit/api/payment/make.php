@@ -6,7 +6,7 @@
     header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-Width');
     
     include_once '../../config/Database.php';
-    include_once '../../models/Booking.php';
+    include_once '../../models/Payment.php';
 
     if(!isset($_SERVER ['PHP_AUTH_USER'])) {
         header("WWW-Authenticate: Basic realm=\"Private Area\"");

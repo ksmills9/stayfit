@@ -18,7 +18,7 @@
         }
 
         public function view() {
-            $query = "SELCT * FROM " . $this->table;
+            $query = "SELECT * FROM " . $this->table;
 
             //Prepare statement
             $stmt = $this->conn->prepare($query);
